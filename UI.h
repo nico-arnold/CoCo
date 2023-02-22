@@ -2,6 +2,10 @@
 #include <Arduino.h>
 #include <ESPUI.h>
 
+uint16_t tab_status;
+uint16_t tab_users;
+uint16_t tab_adduser;
+uint16_t select_user;
 uint16_t wUserId, wUserName, wUserNUID, wUserCoffee, wUserSave;
 uint16_t wNewNUID, wNewName, wUserAdd;
 
@@ -15,63 +19,63 @@ void textCallback(Control *sender, int type) {
 	//This callback is needed to handle the changed values, even though it doesn't do anything itself.
 }
 
+void updateUI(){
+  for (int i=0; i<usercnt; i++){
+    ESPUI.updateLabel(userLabels[i], String(coffees[i]));
+  }
+}
+
 void select_user_cb(Control* sender, int value){
     Serial.print("Name selector CB: id=");
     Serial.println(sender->value);
-    Serial.print("User size: ");
-    Serial.println(j_users.size());
-    int id = -1;
-    for (int i=0; i<j_users.size(); i++){
+    int id = sender->value.toInt();
+    //int id = -1;
+    /*for (int i=0; i<usercnt; i++){
       int curId = sender->value.toInt();
-      /*Serial.print("  Testing ");
-      Serial.print(curId);
-      Serial.print("... ");*/
+      
       if (j_users[i]["id"].as<int>() == curId){
         id = curId;
         //Serial.println("Yup.");
       }else{
         //Serial.println("Nope.");
       }
-    }
-    if (id == -1){
+    }*/
+    if (id >= usercnt){
       Serial.println("User not found");
       return;
     }
 
-    const char* name = j_users[id]["name"].as<const char*>();
+    const char* name = usernames[id].c_str();
     //String uid = j_users[id]["id"].as<String>();
     Serial.print(name);
     Serial.print("->");
-    Serial.println(j_users[id]["coffee"].as<int>());
+    Serial.println(coffees[id]);
 
-    ESPUI.updateControlValue(wUserId, j_users[id]["id"].as<String>());
-    ESPUI.updateControlValue(wUserName, j_users[id]["name"].as<String>());
-    ESPUI.updateControlValue(wUserNUID, j_users[id]["nfc"].as<String>());
-    ESPUI.updateControlValue(wUserCoffee, j_users[id]["coffee"].as<String>());
+    ESPUI.updateControlValue(wUserId, String(id));
+    ESPUI.updateControlValue(wUserName, usernames[id]);
+    ESPUI.updateControlValue(wUserNUID, nuids[id]);
+    ESPUI.updateControlValue(wUserCoffee, String(coffees[id]));
 }
 
 void setupESPUI(){
-  uint16_t tab_status = ESPUI.addControl(ControlType::Tab, "Status", "Status");
-  uint16_t tab_users = ESPUI.addControl(ControlType::Tab, "Users", "Users");
-  uint16_t tab_adduser = ESPUI.addControl(ControlType::Tab, "Add User", "Add User");
+  tab_status = ESPUI.addControl(ControlType::Tab, "Status", "Status");
+  tab_users = ESPUI.addControl(ControlType::Tab, "Users", "Users");
+  tab_adduser = ESPUI.addControl(ControlType::Tab, "Add User", "Add User");
 
   // shown above all tabs
   
 
-  uint16_t select_user = ESPUI.addControl(ControlType::Select, "User:", "", ControlColor::Alizarin, tab_users, &select_user_cb);
-  Serial.print("User size: ");
-  int jSize = j_users.size();
-  Serial.println(jSize);
-  for (int i=0; i<jSize; i++){
-    const char* name = j_users[i]["name"].as<const char*>();
-    String id = j_users[i]["id"].as<String>();
-    if (i != id.toInt()){
+  select_user = ESPUI.addControl(ControlType::Select, "User:", "", ControlColor::Alizarin, tab_users, &select_user_cb);
+  for (int i=0; i<usercnt; i++){
+    const char* name = usernames[i].c_str();
+    String id = String(i);
+    /*if (i != id.toInt()){
       Serial.print("ERROR: ID inconsistency: ");
       Serial.print(i);
       Serial.print(" vs ");
       Serial.print(id);
-    }
-    userLabels[i] = ESPUI.addControl(ControlType::Label, j_users[i]["name"].as<const char*>(), j_users[i]["coffee"].as<String>(), ControlColor::Turquoise, tab_status);
+    }*/
+    userLabels[i] = ESPUI.addControl(ControlType::Label, usernames[i].c_str(), String(coffees[i]), ControlColor::Turquoise, tab_status);
     ESPUI.addControl(ControlType::Option, name, id, ControlColor::Alizarin, select_user);
   }
   wUserId = ESPUI.addControl(ControlType::Label, "ID", "", ControlColor::Alizarin, tab_users);
@@ -141,15 +145,18 @@ void save_user(Control* sender, int type){
   Serial.println(nuid);
   Serial.print(" -> ");
   Serial.println(coffee);
-  j_users[uid]["name"] = name;
+  /*j_users[uid]["name"] = name;
   j_users[uid]["nuid"] = nuid;
-  j_users[uid]["coffee"] = coffee;
+  j_users[uid]["coffee"] = coffee;*/
+  usernames[uid] = name;
+  nuids[uid] = nuid;
+  coffees[uid] = coffee;
   Serial.print("Stored user data: ");
-  Serial.print(j_users[uid]["name"].as<const char*>());
+  Serial.print(usernames[uid]);
   Serial.print(" = ");
-  Serial.println(j_users[uid]["nuid"].as<const char*>());
+  Serial.println(nuids[uid]);
   Serial.print(" -> ");
-  Serial.println(j_users[uid]["coffee"].as<const char*>());
+  Serial.println(coffees[uid]);
 
   Serial.println("Saving user data...");
   if (save_json_data()){
@@ -165,8 +172,19 @@ void add_user(Control* sender, int type){
   if (type == B_UP){
     return;
   }
+  const char* name = ESPUI.getControl(wNewName)->value.c_str();
+  const char* nuid = ESPUI.getControl(wNewNUID)->value.c_str();
   Serial.print("Adding new User: ");
-  Serial.print(ESPUI.getControl(wNewName)->value.c_str());
+  Serial.print(name);
   Serial.print(" = ");
-  Serial.println(ESPUI.getControl(wNewNUID)->value.c_str());
+  Serial.println(nuid);
+  usernames[usercnt] = name;
+  nuids[usercnt] = nuid;
+  coffees[usercnt] = 0;
+  userLabels[usercnt] = ESPUI.addControl(ControlType::Label, name, String("0"), ControlColor::Turquoise, tab_status);
+  ESPUI.addControl(ControlType::Option, name, String(usercnt), ControlColor::Alizarin, select_user);
+  usercnt++;
+  save_json_data();
+  updateUI();
+  ESPUI.updateText(wNewNUID, "");
 }

@@ -20,15 +20,19 @@ const char* ssid = "ESPUI";
 const char* password = "espui";
 const char* hostname = "espui";
 
-StaticJsonDocument<1024> usersDoc;
-JsonArray j_users;
 byte nuidPICC[4] = {0, 0, 0, 0};
+
+uint8_t usercnt = 0;
+String usernames[MAX_USERS];
+String nuids[MAX_USERS];
+uint16_t coffees[MAX_USERS];
 
 uint16_t userLabels[MAX_USERS];
 
 String lastNuid = "";
 
 void readJSON();
+void addCoffee(int uid);
 bool save_json_data();
 void save_user(Control* sender, int type);
 void add_user(Control* sender, int type);
