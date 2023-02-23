@@ -22,6 +22,7 @@ void textCallback(Control *sender, int type) {
 void updateUI(){
   for (int i=0; i<usercnt; i++){
     ESPUI.updateLabel(userLabels[i], String(coffees[i]));
+    ESPUI.updateControlLabel(userLabels[i], usernames[i].c_str());
   }
 }
 
@@ -65,7 +66,7 @@ void setupESPUI(){
   // shown above all tabs
   
 
-  select_user = ESPUI.addControl(ControlType::Select, "User:", "", ControlColor::Alizarin, tab_users, &select_user_cb);
+  select_user = ESPUI.addControl(ControlType::Select, "User:", "", ControlColor::Turquoise, tab_users, &select_user_cb);
   for (int i=0; i<usercnt; i++){
     const char* name = usernames[i].c_str();
     String id = String(i);
@@ -76,18 +77,18 @@ void setupESPUI(){
       Serial.print(id);
     }*/
     userLabels[i] = ESPUI.addControl(ControlType::Label, usernames[i].c_str(), String(coffees[i]), ControlColor::Turquoise, tab_status);
-    ESPUI.addControl(ControlType::Option, name, id, ControlColor::Alizarin, select_user);
+    ESPUI.addControl(ControlType::Option, name, id, ControlColor::Turquoise, select_user);
   }
-  wUserId = ESPUI.addControl(ControlType::Label, "ID", "", ControlColor::Alizarin, tab_users);
-  wUserName = ESPUI.addControl(ControlType::Text, "Name:", "", ControlColor::Alizarin, tab_users, textCallback);
-  wUserNUID = ESPUI.addControl(ControlType::Text, "NUID:", "", ControlColor::Alizarin, tab_users, textCallback);
-  wUserCoffee = ESPUI.addControl(ControlType::Number, "Coffee:", "0", ControlColor::Alizarin, tab_users, textCallback);
-  wUserSave = ESPUI.addControl(ControlType::Button, "Save User", "Save", ControlColor::Peterriver, tab_users, &save_user);
+  wUserId = ESPUI.addControl(ControlType::Label, "ID", "", ControlColor::Turquoise, tab_users);
+  wUserName = ESPUI.addControl(ControlType::Text, "Name:", "", ControlColor::Turquoise, tab_users, textCallback);
+  wUserNUID = ESPUI.addControl(ControlType::Text, "NUID:", "", ControlColor::Turquoise, tab_users, textCallback);
+  wUserCoffee = ESPUI.addControl(ControlType::Number, "Coffee:", "0", ControlColor::Turquoise, tab_users, textCallback);
+  wUserSave = ESPUI.addControl(ControlType::Button, "Save User", "Save", ControlColor::Turquoise, tab_users, &save_user);
   //ESPUI.text()
 
-  wNewNUID = ESPUI.addControl(ControlType::Text, "NUID:", "", ControlColor::Alizarin, tab_adduser, textCallback);
-  wNewName = ESPUI.addControl(ControlType::Text, "Name:", "", ControlColor::Alizarin, tab_adduser, textCallback);
-  wUserAdd = ESPUI.addControl(ControlType::Button, "Add User", "Save", ControlColor::Peterriver, tab_adduser, &add_user);
+  wNewNUID = ESPUI.addControl(ControlType::Text, "NUID:", "", ControlColor::Turquoise, tab_adduser, textCallback);
+  wNewName = ESPUI.addControl(ControlType::Text, "Name:", "", ControlColor::Turquoise, tab_adduser, textCallback);
+  wUserAdd = ESPUI.addControl(ControlType::Button, "Add User", "Save", ControlColor::Turquoise, tab_adduser, &add_user);
 
   /*
     * .begin loads and serves all files from PROGMEM directly.
@@ -165,7 +166,7 @@ void save_user(Control* sender, int type){
     Serial.println("Writing failed.");
     while(1){}
   }
-  //ESPUI.updateControl(button1);
+  updateUI();
 }
 
 void add_user(Control* sender, int type){
@@ -182,9 +183,9 @@ void add_user(Control* sender, int type){
   nuids[usercnt] = nuid;
   coffees[usercnt] = 0;
   userLabels[usercnt] = ESPUI.addControl(ControlType::Label, name, String("0"), ControlColor::Turquoise, tab_status);
-  ESPUI.addControl(ControlType::Option, name, String(usercnt), ControlColor::Alizarin, select_user);
+  ESPUI.addControl(ControlType::Option, name, String(usercnt), ControlColor::Turquoise, select_user);
   usercnt++;
   save_json_data();
-  updateUI();
   ESPUI.updateText(wNewNUID, "");
+  updateUI();
 }
