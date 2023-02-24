@@ -47,7 +47,8 @@ void readJSON(){
   JsonArray j_users;
   File file = SPIFFS.open(COCO_FILE, "r");
   if(!file){
-    Serial.println("Failed to open file for reading");
+    Serial.println("Failed to open file for reading; creating empty test file");
+    makeTestJSON();
     return;
   }
   Serial.print("\n\n");

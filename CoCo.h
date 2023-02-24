@@ -1,12 +1,29 @@
 #define MAX_USERS 30
 
 #define COCO_FILE "/coco.json"
+#define BUZZ_LENGTH 100
 
+#define PIN_BUZZER 5
+
+#if defined(ESP32)
+
+//ESP32 pin defs
 #define PIN_MISO  10
 #define PIN_MOSI  3
 #define PIN_SCK   2
 #define PIN_CS    7
 #define PIN_RST   0
+
+#else
+
+//ESP8266 pin defs
+#define PIN_MISO  12
+#define PIN_MOSI  13
+#define PIN_SCK   14
+#define PIN_CS    15
+#define PIN_RST   4
+
+#endif
 
 #include <MFRC522.h>
 
@@ -30,7 +47,14 @@ uint16_t coffees[MAX_USERS];
 uint16_t userLabels[MAX_USERS];
 
 String lastNuid = "";
+int buzzTimes = 0;
+bool buzzState = false;
 
+void buzzCycle();
+unsigned long nextBuzzCycle = 0;
+
+void startBuzz();
+void stopBuzz();
 void readJSON();
 void addCoffee(int uid);
 bool save_json_data();

@@ -1,7 +1,10 @@
+#include <TickTwo.h>
 #include <DNSServer.h>
 #include <ESPUI.h>
 #include "FS.h"
+#if defined(ESP32)
 #include "SPIFFS.h"
+#endif
 #include <ArduinoJson.h>
 #include <SPI.h>
 #include <MFRC522.h>
@@ -15,6 +18,37 @@
 #include "CoCo.h"
 #include "JSON.h"
 #include "UI.h"
+
+void stopBuzz(){
+  digitalWrite(PIN_BUZZER, LOW);
+  buzzState = false;
+}
+
+void buzzCycle(){
+  buzzState = !buzzState;
+  digitalWrite(PIN_BUZZER, buzzState);
+  buzzTimes--;
+  if (buzzTimes){
+    Serial.print("Switching Buzzer to "); Serial.println(buzzState);
+    Serial.print("Remaining buzzCycles: "); Serial.println(buzzTimes);
+    nextBuzzCycle = millis() + BUZZ_LENGTH;
+  }else{
+    stopBuzz();
+    Serial.println("Stopping Buzzer");
+  }
+}
+
+void startBuzz(){
+  nextBuzzCycle = millis() + BUZZ_LENGTH;
+  digitalWrite(PIN_BUZZER, HIGH);
+  buzzState = true;
+  Serial.println("Starting Buzzer");
+}
+
+void buzz(int times){
+  buzzTimes = 2*(times-1)+1; 
+  startBuzz();
+}
 
 void nfcRegistered(String nuid){
   int id = -1;
@@ -31,9 +65,11 @@ void nfcRegistered(String nuid){
     }
   }
   if (id == -1){
+    buzz(3);
     Serial.println("User not found; adding to new NUID");
     ESPUI.updateControlValue(wNewNUID, nuid);
   }else{
+    buzz(2);
     Serial.print(" -> Identified as "); Serial.println(usernames[id]);
     addCoffee(id);
   }
@@ -163,17 +199,32 @@ void setupWiFi(){
   Serial.println(WiFi.getMode() == WIFI_AP ? WiFi.softAPIP() : WiFi.localIP());
 }
 
+
+
+
+
 void setup(void){
     Serial.begin(115200);
-
+    pinMode(PIN_BUZZER, OUTPUT);
+    buzz(3);
+#ifdef ESP32
     if (!SPIFFS.begin(true)) {
+#else
+    #warning "Compiling for ESP8266"
+    SPI.begin();
+    if (!SPIFFS.begin()) {
+#endif
       Serial.println("An Error has occurred while mounting SPIFFS");
       return;
     }
 
     Serial.println("SPIFFS initialized. Starting SPI...");
 
+#if defined(ESP32)
     SPI.begin(PIN_SCK, PIN_MISO, PIN_MOSI, -1);
+#else
+    //SPI.begin(PIN_SCK, PIN_MISO, PIN_MOSI, -1);
+#endif
     Serial.println("Done. Connecting to MFRC522...");
     rfid.PCD_Init();
     Serial.print(F("Reader :"));
@@ -192,7 +243,9 @@ void loop(void)
 {
     dnsServer.processNextRequest();
     readRFID();
-
+    if (buzzTimes > 0 && millis() > nextBuzzCycle){
+      buzzCycle();
+    }
     //static long oldTime = 0;
     //static bool switchi = false;
 
