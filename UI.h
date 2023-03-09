@@ -11,6 +11,7 @@ uint16_t wNewNUID, wNewName, wUserAdd;
 
 void select_user_cb(Control* sender, int value);
 void setupESPUI();
+void beginESPUI();
 void save_user(Control* sender, int type);
 void add_user(Control* sender, int type);
 
@@ -27,8 +28,8 @@ void updateUI(){
 }
 
 void select_user_cb(Control* sender, int value){
-    Serial.print("Name selector CB: id=");
-    Serial.println(sender->value);
+    // Serial.print("Name selector CB: id=");
+    // Serial.println(sender->value);
     int id = sender->value.toInt();
     //int id = -1;
     /*for (int i=0; i<usercnt; i++){
@@ -36,21 +37,21 @@ void select_user_cb(Control* sender, int value){
       
       if (j_users[i]["id"].as<int>() == curId){
         id = curId;
-        //Serial.println("Yup.");
+        //// Serial.println("Yup.");
       }else{
-        //Serial.println("Nope.");
+        //// Serial.println("Nope.");
       }
     }*/
     if (id >= usercnt){
-      Serial.println("User not found");
+      // Serial.println("User not found");
       return;
     }
 
     const char* name = usernames[id].c_str();
     //String uid = j_users[id]["id"].as<String>();
-    Serial.print(name);
-    Serial.print("->");
-    Serial.println(coffees[id]);
+    // Serial.print(name);
+    // Serial.print("->");
+    // Serial.println(coffees[id]);
 
     ESPUI.updateControlValue(wUserId, String(id));
     ESPUI.updateControlValue(wUserName, usernames[id]);
@@ -71,10 +72,10 @@ void setupESPUI(){
     const char* name = usernames[i].c_str();
     String id = String(i);
     /*if (i != id.toInt()){
-      Serial.print("ERROR: ID inconsistency: ");
-      Serial.print(i);
-      Serial.print(" vs ");
-      Serial.print(id);
+      // Serial.print("ERROR: ID inconsistency: ");
+      // Serial.print(i);
+      // Serial.print(" vs ");
+      // Serial.print(id);
     }*/
     userLabels[i] = ESPUI.addControl(ControlType::Label, usernames[i].c_str(), String(coffees[i]), ControlColor::Turquoise, tab_status);
     ESPUI.addControl(ControlType::Option, name, id, ControlColor::Turquoise, select_user);
@@ -107,6 +108,9 @@ void setupESPUI(){
     * password, for example begin("ESPUI Control", "username", "password")
     */
 
+}
+
+void beginESPUI(){
   ESPUI.begin("CoCo Control");
 }
 
@@ -122,48 +126,48 @@ void save_user(Control* sender, int type){
   String name = ESPUI.getControl(wUserName)->value;
   String nuid = ESPUI.getControl(wUserNUID)->value;
   int coffee = ESPUI.getControl(wUserCoffee)->value.toInt();
-  Serial.print("Retrieved user data: ");
-  Serial.print(name);
-  Serial.print(" = ");
-  Serial.println(nuid);
-  Serial.print(" -> ");
-  Serial.println(coffee);
-  //Serial.println(String("param: ") + String(int(param)));
-  Serial.println("Checking user data...");
+  // Serial.print("Retrieved user data: ");
+  // Serial.print(name);
+  // Serial.print(" = ");
+  // Serial.println(nuid);
+  // Serial.print(" -> ");
+  // Serial.println(coffee);
+  //// Serial.println(String("param: ") + String(int(param)));
+  // Serial.println("Checking user data...");
   if (uid < 0 || uid > 29){
-    Serial.print("Error: uid out of bound: ");
-    Serial.println(uid);
+    // Serial.print("Error: uid out of bound: ");
+    // Serial.println(uid);
     while (1){}
   }
   if (coffee < 0 || coffee > 65535){
-    Serial.print("Error: coffee out of bound: ");
-    Serial.println(coffee);
+    // Serial.print("Error: coffee out of bound: ");
+    // Serial.println(coffee);
     while (1){}
   }
-  Serial.print("Setting user data: ");
-  Serial.print(name);
-  Serial.print(" = ");
-  Serial.println(nuid);
-  Serial.print(" -> ");
-  Serial.println(coffee);
+  // Serial.print("Setting user data: ");
+  // Serial.print(name);
+  // Serial.print(" = ");
+  // Serial.println(nuid);
+  // Serial.print(" -> ");
+  // Serial.println(coffee);
   /*j_users[uid]["name"] = name;
   j_users[uid]["nuid"] = nuid;
   j_users[uid]["coffee"] = coffee;*/
   usernames[uid] = name;
   nuids[uid] = nuid;
   coffees[uid] = coffee;
-  Serial.print("Stored user data: ");
-  Serial.print(usernames[uid]);
-  Serial.print(" = ");
-  Serial.println(nuids[uid]);
-  Serial.print(" -> ");
-  Serial.println(coffees[uid]);
+  // Serial.print("Stored user data: ");
+  // Serial.print(usernames[uid]);
+  // Serial.print(" = ");
+  // Serial.println(nuids[uid]);
+  // Serial.print(" -> ");
+  // Serial.println(coffees[uid]);
 
-  Serial.println("Saving user data...");
+  // Serial.println("Saving user data...");
   if (save_json_data()){
-    Serial.println("Data saved successfully.");
+    // Serial.println("Data saved successfully.");
   }else{
-    Serial.println("Writing failed.");
+    // Serial.println("Writing failed.");
     while(1){}
   }
   updateUI();
@@ -175,10 +179,10 @@ void add_user(Control* sender, int type){
   }
   const char* name = ESPUI.getControl(wNewName)->value.c_str();
   const char* nuid = ESPUI.getControl(wNewNUID)->value.c_str();
-  Serial.print("Adding new User: ");
-  Serial.print(name);
-  Serial.print(" = ");
-  Serial.println(nuid);
+  // Serial.print("Adding new User: ");
+  // Serial.print(name);
+  // Serial.print(" = ");
+  // Serial.println(nuid);
   usernames[usercnt] = name;
   nuids[usercnt] = nuid;
   coffees[usercnt] = 0;

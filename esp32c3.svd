@@ -9261,7 +9261,7 @@
             </field>
             <field>
               <name>BLK_NUM</name>
-              <description>The serial number of the block to be programmed. Value 0-10 corresponds to block number 0-10, respectively.</description>
+              <description>The // Serial number of the block to be programmed. Value 0-10 corresponds to block number 0-10, respectively.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>4</bitWidth>
               <access>read-write</access>
@@ -25275,7 +25275,7 @@
     </peripheral>
     <peripheral>
       <name>SPI0</name>
-      <description>SPI (Serial Peripheral Interface) Controller</description>
+      <description>SPI (// Serial Peripheral Interface) Controller</description>
       <groupName>SPI0</groupName>
       <baseAddress>0x60003000</baseAddress>
       <addressBlock>
@@ -25910,7 +25910,7 @@
     </peripheral>
     <peripheral>
       <name>SPI1</name>
-      <description>SPI (Serial Peripheral Interface) Controller</description>
+      <description>SPI (// Serial Peripheral Interface) Controller</description>
       <groupName>SPI1</groupName>
       <baseAddress>0x60002000</baseAddress>
       <addressBlock>
@@ -27238,7 +27238,7 @@
     </peripheral>
     <peripheral>
       <name>SPI2</name>
-      <description>SPI (Serial Peripheral Interface) Controller</description>
+      <description>SPI (// Serial Peripheral Interface) Controller</description>
       <groupName>SPI2</groupName>
       <baseAddress>0x60024000</baseAddress>
       <addressBlock>
@@ -35039,7 +35039,7 @@
     </peripheral>
     <peripheral>
       <name>USB_DEVICE</name>
-      <description>Full-speed USB Serial/JTAG Controller</description>
+      <description>Full-speed USB // Serial/JTAG Controller</description>
       <groupName>USB_DEVICE</groupName>
       <baseAddress>0x60043000</baseAddress>
       <addressBlock>
@@ -35048,7 +35048,7 @@
         <usage>registers</usage>
       </addressBlock>
       <interrupt>
-        <name>USB_SERIAL_JTAG</name>
+        <name>USB_// Serial_JTAG</name>
         <value>26</value>
       </interrupt>
       <registers>
@@ -35060,7 +35060,7 @@
           <fields>
             <field>
               <name>RDWR_BYTE</name>
-              <description>Write and read byte data to/from UART Tx/Rx FIFO through this field. When USB_DEVICE_SERIAL_IN_EMPTY_INT is set, then user can write data (up to 64 bytes) into UART Tx FIFO. When USB_DEVICE_SERIAL_OUT_RECV_PKT_INT is set, user can check USB_DEVICE_OUT_EP1_WR_ADDR USB_DEVICE_OUT_EP0_RD_ADDR to know how many data is received, then read data from UART Rx FIFO.</description>
+              <description>Write and read byte data to/from UART Tx/Rx FIFO through this field. When USB_DEVICE_// Serial_IN_EMPTY_INT is set, then user can write data (up to 64 bytes) into UART Tx FIFO. When USB_DEVICE_// Serial_OUT_RECV_PKT_INT is set, user can check USB_DEVICE_OUT_EP1_WR_ADDR USB_DEVICE_OUT_EP0_RD_ADDR to know how many data is received, then read data from UART Rx FIFO.</description>
               <bitOffset>0</bitOffset>
               <bitWidth>8</bitWidth>
               <access>read-write</access>
@@ -35082,14 +35082,14 @@
               <access>write-only</access>
             </field>
             <field>
-              <name>SERIAL_IN_EP_DATA_FREE</name>
+              <name>// Serial_IN_EP_DATA_FREE</name>
               <description>1'b1: Indicate UART Tx FIFO is not full and can write data into in. After writing USB_DEVICE_WR_DONE, this bit would be 0 until data in UART Tx FIFO is read by USB Host.</description>
               <bitOffset>1</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
             </field>
             <field>
-              <name>SERIAL_OUT_EP_DATA_AVAIL</name>
+              <name>// Serial_OUT_EP_DATA_AVAIL</name>
               <description>1'b1: Indicate there is data in UART Rx FIFO.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
@@ -35119,15 +35119,15 @@
               <access>read-only</access>
             </field>
             <field>
-              <name>SERIAL_OUT_RECV_PKT_INT_RAW</name>
-              <description>The raw interrupt bit turns to high level when Serial Port OUT Endpoint received one packet.</description>
+              <name>// Serial_OUT_RECV_PKT_INT_RAW</name>
+              <description>The raw interrupt bit turns to high level when // Serial Port OUT Endpoint received one packet.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
             </field>
             <field>
-              <name>SERIAL_IN_EMPTY_INT_RAW</name>
-              <description>The raw interrupt bit turns to high level when Serial Port IN Endpoint is empty.</description>
+              <name>// Serial_IN_EMPTY_INT_RAW</name>
+              <description>The raw interrupt bit turns to high level when // Serial Port IN Endpoint is empty.</description>
               <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
@@ -35211,15 +35211,15 @@
               <access>read-only</access>
             </field>
             <field>
-              <name>SERIAL_OUT_RECV_PKT_INT_ST</name>
-              <description>The raw interrupt status bit for the USB_DEVICE_SERIAL_OUT_RECV_PKT_INT interrupt.</description>
+              <name>// Serial_OUT_RECV_PKT_INT_ST</name>
+              <description>The raw interrupt status bit for the USB_DEVICE_// Serial_OUT_RECV_PKT_INT interrupt.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
             </field>
             <field>
-              <name>SERIAL_IN_EMPTY_INT_ST</name>
-              <description>The raw interrupt status bit for the USB_DEVICE_SERIAL_IN_EMPTY_INT interrupt.</description>
+              <name>// Serial_IN_EMPTY_INT_ST</name>
+              <description>The raw interrupt status bit for the USB_DEVICE_// Serial_IN_EMPTY_INT interrupt.</description>
               <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-only</access>
@@ -35303,15 +35303,15 @@
               <access>read-write</access>
             </field>
             <field>
-              <name>SERIAL_OUT_RECV_PKT_INT_ENA</name>
-              <description>The interrupt enable bit for the USB_DEVICE_SERIAL_OUT_RECV_PKT_INT interrupt.</description>
+              <name>// Serial_OUT_RECV_PKT_INT_ENA</name>
+              <description>The interrupt enable bit for the USB_DEVICE_// Serial_OUT_RECV_PKT_INT interrupt.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
             </field>
             <field>
-              <name>SERIAL_IN_EMPTY_INT_ENA</name>
-              <description>The interrupt enable bit for the USB_DEVICE_SERIAL_IN_EMPTY_INT interrupt.</description>
+              <name>// Serial_IN_EMPTY_INT_ENA</name>
+              <description>The interrupt enable bit for the USB_DEVICE_// Serial_IN_EMPTY_INT interrupt.</description>
               <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
               <access>read-write</access>
@@ -35395,15 +35395,15 @@
               <access>write-only</access>
             </field>
             <field>
-              <name>SERIAL_OUT_RECV_PKT_INT_CLR</name>
-              <description>Set this bit to clear the USB_DEVICE_SERIAL_OUT_RECV_PKT_INT interrupt.</description>
+              <name>// Serial_OUT_RECV_PKT_INT_CLR</name>
+              <description>Set this bit to clear the USB_DEVICE_// Serial_OUT_RECV_PKT_INT interrupt.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>1</bitWidth>
               <access>write-only</access>
             </field>
             <field>
-              <name>SERIAL_IN_EMPTY_INT_CLR</name>
-              <description>Set this bit to clear the USB_DEVICE_SERIAL_IN_EMPTY_INT interrupt.</description>
+              <name>// Serial_IN_EMPTY_INT_CLR</name>
+              <description>Set this bit to clear the USB_DEVICE_// Serial_IN_EMPTY_INT interrupt.</description>
               <bitOffset>3</bitOffset>
               <bitWidth>1</bitWidth>
               <access>write-only</access>
@@ -35817,7 +35817,7 @@
             </field>
             <field>
               <name>OUT_EP0_WR_ADDR</name>
-              <description>Write data address of OUT endpoint 0. When USB_DEVICE_SERIAL_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP0_WR_ADDR-2 bytes data in OUT EP0.</description>
+              <description>Write data address of OUT endpoint 0. When USB_DEVICE_// Serial_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP0_WR_ADDR-2 bytes data in OUT EP0.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>7</bitWidth>
               <access>read-only</access>
@@ -35846,7 +35846,7 @@
             </field>
             <field>
               <name>OUT_EP1_WR_ADDR</name>
-              <description>Write data address of OUT endpoint 1. When USB_DEVICE_SERIAL_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP1_WR_ADDR-2 bytes data in OUT EP1.</description>
+              <description>Write data address of OUT endpoint 1. When USB_DEVICE_// Serial_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP1_WR_ADDR-2 bytes data in OUT EP1.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>7</bitWidth>
               <access>read-only</access>
@@ -35882,7 +35882,7 @@
             </field>
             <field>
               <name>OUT_EP2_WR_ADDR</name>
-              <description>Write data address of OUT endpoint 2. When USB_DEVICE_SERIAL_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP2_WR_ADDR-2 bytes data in OUT EP2.</description>
+              <description>Write data address of OUT endpoint 2. When USB_DEVICE_// Serial_OUT_RECV_PKT_INT is detected, there are USB_DEVICE_OUT_EP2_WR_ADDR-2 bytes data in OUT EP2.</description>
               <bitOffset>2</bitOffset>
               <bitWidth>7</bitWidth>
               <access>read-only</access>

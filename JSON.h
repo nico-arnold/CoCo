@@ -6,7 +6,7 @@ bool save_json_data();
 
 
 void makeTestJSON(){
-  Serial.println("Making test JSON...");
+  // Serial.println("Making test JSON...");
 
   StaticJsonDocument<512> doc;
   JsonArray users = doc.createNestedArray("users");
@@ -26,17 +26,17 @@ void makeTestJSON(){
   nico["nfc"] = "NFCCODE"; 
   nico["coffee"] = 7;
 
-  Serial.println("Writing file");
+  // Serial.println("Writing file");
 
   File file = SPIFFS.open(COCO_FILE, FILE_WRITE);
   if(!file){
-      Serial.println("- failed to open file for writing");
+      // Serial.println("- failed to open file for writing");
       while(true){}
   }
   if(serializeJson(doc, file) != 0){
-      Serial.println("- file written");
+      // Serial.println("- file written");
   } else {
-      Serial.println("- write failed");
+      // Serial.println("- write failed");
       while(true){}
   }
   file.close();  
@@ -47,17 +47,17 @@ void readJSON(){
   JsonArray j_users;
   File file = SPIFFS.open(COCO_FILE, "r");
   if(!file){
-    Serial.println("Failed to open file for reading; creating empty test file");
+    // Serial.println("Failed to open file for reading; creating empty test file");
     makeTestJSON();
     return;
   }
-  Serial.print("\n\n");
+  // Serial.print("\n\n");
 
   file = SPIFFS.open(COCO_FILE, "r");
   DeserializationError desErr = deserializeJson(usersDoc, file);
   if (desErr){
-    Serial.print(F("deserializeJson() failed with code "));
-    Serial.println(desErr.f_str());
+    // Serial.print(F("deserializeJson() failed with code "));
+    // Serial.println(desErr.f_str());
     return;
   }
   j_users = usersDoc["users"].as<JsonArray>();
@@ -69,17 +69,17 @@ void readJSON(){
     coffees[i] = j_users[i]["coffee"].as<uint16_t>();
   }
 
-  Serial.println("Read users:");
+  // Serial.println("Read users:");
   for (int i=0; i<usercnt; i++){
-    Serial.print("-");
-    Serial.print(i);
-    Serial.print(") ");
-    Serial.print(usernames[i].c_str());
-    Serial.print("=");
-    Serial.print(nuids[i].c_str());
-    Serial.print(" -> ");
-    Serial.print(coffees[i]);
-    Serial.print("\n");
+    // Serial.print("-");
+    // Serial.print(i);
+    // Serial.print(") ");
+    // Serial.print(usernames[i].c_str());
+    // Serial.print("=");
+    // Serial.print(nuids[i].c_str());
+    // Serial.print(" -> ");
+    // Serial.print(coffees[i]);
+    // Serial.print("\n");
   }
   
   file.close();
@@ -96,50 +96,50 @@ bool save_json_data(){
     users[i]["nfc"] = nuids[i];
     users[i]["coffee"] = coffees[i];
   }
-  Serial.println("   Writing file:\n");
-  Serial.print("   ");
-  serializeJson(doc, Serial);
-  Serial.println("\n");
+  // Serial.println("   Writing file:\n");
+  // Serial.print("   ");
+  // SerializeJson(doc, // Serial);
+  // Serial.println("\n");
   File file = SPIFFS.open(COCO_FILE, FILE_WRITE);
   if(!file){
-      Serial.println("- failed to open file for writing");
+      // Serial.println("- failed to open file for writing");
       return false;
   }
   int serBytes = serializeJson(doc, file);
   if (doc.overflowed()){
-    Serial.println("  !document overflowed!");
+    // Serial.println("  !document overflowed!");
   }
   if( serBytes != 0){
-      Serial.print("- file written: ");
-      Serial.print(serBytes);
-      Serial.println(" bytes");
+      // Serial.print("- file written: ");
+      // Serial.print(serBytes);
+      // Serial.println(" bytes");
   } else {
-      Serial.println("- write failed");
+      // Serial.println("- write failed");
       return false;
   }
   file.close();  
 
 
 /*
-  Serial.println("   Opening file...");
+  // Serial.println("   Opening file...");
   File outfile = SPIFFS.open(COCO_FILE, FILE_WRITE);  
   if (!outfile) {
-    Serial.println(F("Failed to create outfile"));
+    // Serial.println(F("Failed to create outfile"));
     return false;
   }
-  Serial.println("   Serializing...\n\n   ");
-  serializeJson(usersDoc, Serial);
-  Serial.println("\n\n");
-  int serBytes = serializeJson(usersDoc, outfile);
+  // Serial.println("   // Serializing...\n\n   ");
+  // SerializeJson(usersDoc, // Serial);
+  // Serial.println("\n\n");
+  int serBytes = // SerializeJson(usersDoc, outfile);
   if (serBytes == 0) {
-    Serial.println(F("Failed to write to outfile"));
+    // Serial.println(F("Failed to write to outfile"));
     return false;
   }
-  Serial.print("   Wrote ");
-  Serial.print(serBytes);
-  Serial.println(" bytes.");
-  Serial.println("   Closing file...");
+  // Serial.print("   Wrote ");
+  // Serial.print(serBytes);
+  // Serial.println(" bytes.");
+  // Serial.println("   Closing file...");
   outfile.close();
-  Serial.println("   Returning...");*/
+  // Serial.println("   Returning...");*/
   return true;
 }

@@ -3,7 +3,14 @@
 #define COCO_FILE "/coco.json"
 #define BUZZ_LENGTH 100
 
-#define PIN_BUZZER 5
+#define WIFI_UPTIME 60000*5
+#define WIFI_NAME  "CoCo-WUI"
+#define WIFI_PW     "naknak"
+
+#define PIN_SOUNDS  3
+//#define PIN_LED     5
+#define PIN_LED     2
+#define PIN_SWITCH  16
 
 #if defined(ESP32)
 
@@ -37,6 +44,9 @@ const char* ssid = "ESPUI";
 const char* password = "espui";
 const char* hostname = "espui";
 
+bool ui_active = false;
+unsigned long closeUITime = 0;
+
 byte nuidPICC[4] = {0, 0, 0, 0};
 
 uint8_t usercnt = 0;
@@ -50,11 +60,9 @@ String lastNuid = "";
 int buzzTimes = 0;
 bool buzzState = false;
 
-void buzzCycle();
 unsigned long nextBuzzCycle = 0;
 
-void startBuzz();
-void stopBuzz();
+void sound(int times);
 void readJSON();
 void addCoffee(int uid);
 bool save_json_data();
